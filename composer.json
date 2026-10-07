@@ -21,6 +21,7 @@
     },
     "extra": {
         "my-sites-ide": {
+            "commands": "src/Console",
             "compose": "docker-compose.yml",
             "services": ["certbot-cloudflare"],
             "autostart": false
