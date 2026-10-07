@@ -1,0 +1,29 @@
+{
+    "name": "yiendos/my-sites-ide-certificates-certbot-cloudflare",
+    "description": "Real, trusted SSL certificates for local sites from Let's Encrypt, via Certbot's Cloudflare DNS challenge, for my-sites-ide",
+    "type": "my-sites-ide-plugin",
+    "license": "MIT",
+    "keywords": ["my-sites-ide", "certbot", "letsencrypt", "cloudflare", "ssl", "certificates"],
+    "authors": [
+        {
+            "name": "Paul Yiend",
+            "email": "yiendos@sbmatrix.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Yiendos\\MySitesIde\\Certificates\\CertbotCloudflare\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "symfony/console": "^7.3"
+    },
+    "extra": {
+        "my-sites-ide": {
+            "compose": "docker-compose.yml",
+            "services": ["certbot-cloudflare"],
+            "autostart": false
+        }
+    }
+}

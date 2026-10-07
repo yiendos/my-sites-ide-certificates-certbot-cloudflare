@@ -1,15 +1,12 @@
 services:
-  certbot:    
+    certbot-cloudflare:
         image: certbot/dns-cloudflare:latest
+        # a one-shot tool, run by the certificates:certbot-* commands (`docker compose run --rm`),
+        # never a long-running service - the profile keeps a bare `docker compose up` from starting it
+        profiles: ["certbot"]
         volumes:
-            - ./../../../../_dev/environment/certificates/certbot/conf:/etc/letsencrypt/:rw
-            - ./../../../../_dev/environment/certificates/certbot/credentials.ini:/etc/credentials.ini
-
-        env_file:
-            - .env
-            - ./../../../../.env
-        environment:
-          - DNS_CLOUDFLARE_EMAIL=${DNS_CLOUDFLARE_EMAIL}
-          - DNS_CLOUDFLARE_API_KEY=${DNS_CLOUDFLARE_API_KEY}
-
-    # docker compose run certbot certonly --dns-cloudflare --dns-cloudflare-credentials /etc/credentials.ini -d local-website.co.uk
+            # The IDE's certificate store, shared with nginx (which mounts its live/ and archive/),
+            # so issued certificates outlive this package and any other certificate plugin
+            - ${IDE_ROOT}/storage/certificates:/etc/letsencrypt
+            # Cloudflare credentials stay on the host, in the IDE's git-ignored storage/ - read-only here
+            - ${IDE_ROOT}/storage/plugins/certbot-cloudflare:/etc/certbot-cloudflare:ro

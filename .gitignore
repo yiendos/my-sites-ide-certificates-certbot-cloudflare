@@ -1,0 +1,11 @@
+vendor/
+composer.lock
+.DS_Store
+
+# Credentials and certificates belong in the IDE's storage/, never in this package -
+# these stop a stray copy being committed by accident
+credentials.ini
+!stubs/credentials.ini
+*.pem
+*.key
+letsencrypt/
