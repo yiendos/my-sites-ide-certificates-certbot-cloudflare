@@ -62,7 +62,7 @@ class CertbotRenewCommand extends Command
         }
 
         if (!$input->getOption('dry-run')) {
-            $io->text(['Servers keep using the old certificate until they reload:', 'docker compose exec nginx nginx -s reload', '']);
+            $io->text(['Servers keep using the old certificate until they reload:', 'php my-sites-ide servers:nginx-reload', '']);
         }
 
         return Command::SUCCESS;

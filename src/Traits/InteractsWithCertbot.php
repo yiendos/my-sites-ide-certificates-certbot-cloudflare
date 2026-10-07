@@ -104,7 +104,7 @@ trait InteractsWithCertbot
             "    ssl_certificate /etc/nginx/ssl/live/{$domain}/fullchain.pem;",
             "    ssl_certificate_key /etc/nginx/ssl/live/{$domain}/privkey.pem;",
             '',
-            'then reload nginx: docker compose exec nginx nginx -s reload',
+            'then reload nginx: php my-sites-ide servers:nginx-reload',
             '',
         ]);
     }

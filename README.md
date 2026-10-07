@@ -61,7 +61,7 @@ mkdir -p storage/certificates storage/plugins/certbot-cloudflare
 rsync -a --exclude .gitkeep _dev/environment/certificates/certbot/conf/ storage/certificates/
 cp -p _dev/environment/certificates/certbot/credentials.ini storage/plugins/certbot-cloudflare/
 chmod 600 storage/plugins/certbot-cloudflare/credentials.ini
-docker compose up -d nginx        # recreate nginx with the new certificate mounts
+php my-sites-ide servers:nginx-start   # recreate nginx with the new certificate mounts
 php my-sites-ide certificates:certbot-list
 ```
 
@@ -87,7 +87,7 @@ certbot-cloudflare container (throwaway)          |
   |- Cloudflare API: adds, then removes, a _acme-challenge TXT record
   |- Let's Encrypt: issues the certificate into live/<domain>/ and archive/<domain>/
 
-nginx container (IDE core, with or without this plugin)
+nginx container (nginx plugin, with or without this plugin)
   |- /etc/nginx/ssl/live     <- storage/certificates/live
   |- /etc/nginx/ssl/archive  <- storage/certificates/archive
 ```
@@ -118,7 +118,7 @@ The service has a compose profile (`certbot`), so `docker compose up` with no se
    ssl_certificate_key /etc/nginx/ssl/live/local.example.com/privkey.pem;
    ```
 
-5. Reload nginx: `docker compose exec nginx nginx -s reload`.
+5. Reload nginx: `php my-sites-ide servers:nginx-reload`.
 
 For the browser to reach it, `local.example.com` has to resolve to your machine. Add an `A` record for
 `127.0.0.1` in Cloudflare (DNS only, not proxied), or a line in `/etc/hosts`.
@@ -163,7 +163,7 @@ a copy ends up in a `Packages/` clone.
 |---|---|
 | `storage/certificates/` | the shared certificate store, mounted as `/etc/letsencrypt` |
 | `storage/plugins/certbot-cloudflare/` | the credentials - created and mounted at `/storage` by the IDE, as the plugin sets `"storage": true` |
-| nginx's `/etc/nginx/ssl/live` and `/archive` mounts (core) | serving the certificates - the plugin doesn't touch nginx itself |
+| the [nginx plugin](https://github.com/yiendos/my-sites-ide-servers-nginx)'s `/etc/nginx/ssl/live` and `/archive` mounts | serving the certificates - the plugin doesn't touch nginx itself |
 | `IDE_ROOT` (set by the CLI and `_dev/cache/ide.env`) | reaching `storage/` from `vendor/` |
 
 ## Troubleshooting
@@ -183,8 +183,8 @@ a token goes in `dns_cloudflare_api_token`, a Global API Key in `dns_cloudflare_
 take the `ssl_certificate` lines out of the vhost.
 
 **The browser still shows the old or self-signed certificate.** nginx only reads certificates when it
-loads its config. Run `docker compose exec nginx nginx -s reload`. If nginx was created before the
-upgrade, recreate it once with `docker compose up -d nginx`, so it picks up the `storage/certificates` mounts.
+loads its config. Run `php my-sites-ide servers:nginx-reload`. If nginx was created before the
+upgrade, recreate it once with `php my-sites-ide servers:nginx-start`, so it picks up the `storage/certificates` mounts.
 
 **`too many certificates already issued`.** Let's Encrypt's rate limit (5 identical certificates a week).
 Test with `--dry-run` first, which uses staging.
