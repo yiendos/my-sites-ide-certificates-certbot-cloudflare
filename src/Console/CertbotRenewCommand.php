@@ -37,6 +37,10 @@ class CertbotRenewCommand extends Command
      * saved the old in-IDE path, which no longer exists. Certbot rewrites
      * the saved path on a successful renewal.
      *
+     * --no-random-sleep-on-renew: certbot waits up to 8 minutes before a
+     * renewal whenever it has no terminal, which `docker compose run` never
+     * gives it - meant to spread cron jobs out, not for someone waiting.
+     *
      * @param OutputInterface $output
      * @param InputInterface $input
      * @param SymfonyStyle $io
@@ -51,7 +55,7 @@ class CertbotRenewCommand extends Command
         }
 
         $domain = $input->getArgument('domain');
-        $arguments = 'renew --dns-cloudflare --dns-cloudflare-credentials ' . escapeshellarg($credentials)
+        $arguments = 'renew --no-random-sleep-on-renew --dns-cloudflare --dns-cloudflare-credentials ' . escapeshellarg($credentials)
             . ($domain ? ' --cert-name ' . escapeshellarg($domain) : '')
             . ($input->getOption('force') ? ' --force-renewal' : '')
             . ($input->getOption('dry-run') ? ' --dry-run' : '');
