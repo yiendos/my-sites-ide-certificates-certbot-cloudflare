@@ -83,7 +83,7 @@ host (my-sites-ide CLI)
                                                   |
 certbot-cloudflare container (throwaway)          |
   |- /etc/letsencrypt         <- storage/certificates/                       (read-write)
-  |- /etc/certbot-cloudflare  <- storage/plugins/certbot-cloudflare/         (read-only, credentials)
+  |- /storage                 <- storage/plugins/certbot-cloudflare/         (credentials, mounted by the IDE)
   |- Cloudflare API: adds, then removes, a _acme-challenge TXT record
   |- Let's Encrypt: issues the certificate into live/<domain>/ and archive/<domain>/
 
@@ -162,7 +162,7 @@ a copy ends up in a `Packages/` clone.
 | From the IDE | Used for |
 |---|---|
 | `storage/certificates/` | the shared certificate store, mounted as `/etc/letsencrypt` |
-| `storage/plugins/certbot-cloudflare/` | the credentials, mounted read-only |
+| `storage/plugins/certbot-cloudflare/` | the credentials - created and mounted at `/storage` by the IDE, as the plugin sets `"storage": true` |
 | nginx's `/etc/nginx/ssl/live` and `/archive` mounts (core) | serving the certificates - the plugin doesn't touch nginx itself |
 | `IDE_ROOT` (set by the CLI and `_dev/cache/ide.env`) | reaching `storage/` from `vendor/` |
 

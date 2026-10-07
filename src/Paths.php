@@ -19,9 +19,10 @@ final class Paths
     public const CERTIFICATES = 'storage/certificates';
 
     /**
-     * Where docker-compose.yml mounts the credentials directory in the container
+     * Where the IDE mounts this plugin's storage/plugins/certbot-cloudflare/ in
+     * the container ("storage": true in composer.json)
      */
-    public const CONTAINER_CREDENTIALS = '/etc/certbot-cloudflare';
+    public const CONTAINER_CREDENTIALS = '/storage';
 
     /**
      * The my-sites-ide project root

@@ -24,7 +24,8 @@
             "commands": "src/Console",
             "compose": "docker-compose.yml",
             "services": ["certbot-cloudflare"],
-            "autostart": false
+            "autostart": false,
+            "storage": true
         }
     }
 }

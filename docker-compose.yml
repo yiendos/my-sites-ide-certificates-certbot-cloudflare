@@ -8,5 +8,5 @@ services:
             # The IDE's certificate store, shared with nginx (which mounts its live/ and archive/),
             # so issued certificates outlive this package and any other certificate plugin
             - ${IDE_ROOT}/storage/certificates:/etc/letsencrypt
-            # Cloudflare credentials stay on the host, in the IDE's git-ignored storage/ - read-only here
-            - ${IDE_ROOT}/storage/plugins/certbot-cloudflare:/etc/certbot-cloudflare:ro
+            # the Cloudflare credentials, in storage/plugins/certbot-cloudflare/, are mounted at /storage
+            # by the IDE itself ("storage": true in composer.json)
